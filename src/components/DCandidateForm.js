@@ -269,7 +269,184 @@
 // export default DCandidateForm;
 
 
-import React from "react";
+// import React from "react";
+// import api from "../actions/api";
+// import {
+//   TextField,
+//   Grid,
+//   FormControl,
+//   InputLabel,
+//   Select,
+//   MenuItem,
+//   Box,
+//   Button
+// } from "@mui/material";
+// import useForm from "./useForm";
+
+// // const initialFieldValues = {
+// //   fullName: "",
+// //   mobile: "",
+// //   email: "",
+// //   age: "",
+// //   bloodgroup: "",
+// //   address: ""
+// // };
+// const initialFieldValues = {
+//     fullname: "",
+//     phone: "",
+//     email: "",
+//     age: "",
+//     bloodgroup: "",
+//     address: ""
+//   };
+
+// const DCandidateForm = () => {
+//     const validate = () => {
+//         let temp = {}
+//         temp fullname = values.fullname = "this field is required."
+//     }
+//   const { values, handleInputChange, resetForm } =
+//     useForm(initialFieldValues);
+
+// //   const handleSubmit = (e) => {
+// //     e.preventDefault();
+
+// //     // ✅ form data available here
+// //     console.log("Submitted values:", values);
+
+// // const handleSubmit = e => {
+// //     e.preventDefault()
+// //     if (validate()) {
+// //         const onSuccess = () => {
+// //             resetForm()
+// //             addToast("Submitted successfully", { appearance: 'success' })
+// //         }
+// //         if (props.currentId == 0)
+// //             props.createDCandidate(values, onSuccess)
+// //         else
+// //             props.updateDCandidate(props.currentId, values, onSuccess)
+// //     }
+// // }
+
+// //     // 👉 later:
+// //    //  dispatch(actions.create(values))
+// //     // axios.post("/api/candidate", values)
+
+// //     resetForm();
+// //   };
+// const handleSubmit = async (e) => {
+//     e.preventDefault();
+  
+//     const payload = {
+//       ...values,
+//       age: values.age ? Number(values.age) : null
+//     };
+  
+//     try {
+//       await api.dCandidate().create(payload);
+//       alert("Saved successfully");
+//       resetForm();
+//     } catch (err) {
+//       console.error(err);
+//       alert("Error saving data");
+//     }
+//   };
+
+//   return (
+//     <Box
+//       component="form"
+//       onSubmit={handleSubmit}   // ✅ HERE
+//       autoComplete="off"
+//       noValidate
+//       sx={{
+//         "& .MuiTextField-root": {
+//           m: 1,
+//           minWidth: 230,
+//         },
+//       }}
+//     >
+//       <Grid container>
+//         <Grid item xs={6}>
+//           <TextField
+//             name="fullName"
+//             label="Full Name"
+//             value={values.fullName}
+//             onChange={handleInputChange}
+//           />
+
+//           <TextField
+//             name="email"
+//             label="Email"
+//             value={values.email}
+//             onChange={handleInputChange}
+//           />
+
+//           <FormControl sx={{ m: 1, minWidth: 230 }}>
+//             <InputLabel>Blood Group</InputLabel>
+//             <Select
+//               name="bloodgroup"
+//               value={values.bloodgroup}
+//               onChange={handleInputChange}
+//               label="Blood Group"
+//             >
+//               <MenuItem value="">Select Blood Group</MenuItem>
+//               <MenuItem value="A+">A +ve</MenuItem>
+//               <MenuItem value="A-">A -ve</MenuItem>
+//               <MenuItem value="B+">B +ve</MenuItem>
+//               <MenuItem value="B-">B -ve</MenuItem>
+//               <MenuItem value="AB+">AB +ve</MenuItem>
+//               <MenuItem value="AB-">AB -ve</MenuItem>
+//               <MenuItem value="O+">O +ve</MenuItem>
+//               <MenuItem value="O-">O -ve</MenuItem>
+//             </Select>
+//           </FormControl>
+//         </Grid>
+
+//         <Grid item xs={6}>
+//           <TextField
+//             name="mobile"
+//             label="Mobile"
+//             value={values.mobile}
+//             onChange={handleInputChange}
+//           />
+
+//           <TextField
+//             name="age"
+//             label="Age"
+//             value={values.age}
+//             onChange={handleInputChange}
+//           />
+
+//           <TextField
+//             name="address"
+//             label="Address"
+//             value={values.address}
+//             onChange={handleInputChange}
+//           />
+
+//           <Box sx={{ m: 1 }}>
+//             <Button type="submit" variant="contained">
+//               Submit
+//             </Button>
+
+//             <Button
+//               variant="outlined"
+//               sx={{ ml: 1 }}
+//               onClick={resetForm}
+//             >
+//               Reset
+//             </Button>
+//           </Box>
+//         </Grid>
+//       </Grid>
+//     </Box>
+//   );
+// };
+
+// export default DCandidateForm;
+
+
+import React, { useState } from "react";
 import api from "../actions/api";
 import {
   TextField,
@@ -283,91 +460,76 @@ import {
 } from "@mui/material";
 import useForm from "./useForm";
 
-// const initialFieldValues = {
-//   fullName: "",
-//   mobile: "",
-//   email: "",
-//   age: "",
-//   bloodgroup: "",
-//   address: ""
-// };
 const initialFieldValues = {
-    fullname: "",
-    phone: "",
-    email: "",
-    age: "",
-    bloodgroup: "",
-    address: ""
-  };
+  fullname: "",
+  phone: "",
+  email: "",
+  age: "",
+  bloodgroup: "",
+  address: ""
+};
 
 const DCandidateForm = () => {
-  const { values, handleInputChange, resetForm } =
-    useForm(initialFieldValues);
+  const { values, handleInputChange, resetForm } = useForm(initialFieldValues);
+  const [errors, setErrors] = useState({});
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
+  // Validation function
+  const validate = () => {
+    let temp = {};
+    temp.fullname = values.fullname ? "" : "Full Name is required.";
+    temp.phone = values.phone ? "" : "Phone is required.";
+    temp.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email) ? "" : "Email is invalid.";
+    temp.age = values.age && Number(values.age) > 0 ? "" : ""; // optional
+    temp.bloodgroup = values.bloodgroup ? "" : "Blood Group is required.";
+    temp.address = values.address ? "" : "Address is required.";
 
-//     // ✅ form data available here
-//     console.log("Submitted values:", values);
+    setErrors({ ...temp });
 
-// const handleSubmit = e => {
-//     e.preventDefault()
-//     if (validate()) {
-//         const onSuccess = () => {
-//             resetForm()
-//             addToast("Submitted successfully", { appearance: 'success' })
-//         }
-//         if (props.currentId == 0)
-//             props.createDCandidate(values, onSuccess)
-//         else
-//             props.updateDCandidate(props.currentId, values, onSuccess)
-//     }
-// }
+    return Object.values(temp).every(x => x === "");
+  };
 
-//     // 👉 later:
-//    //  dispatch(actions.create(values))
-//     // axios.post("/api/candidate", values)
-
-//     resetForm();
-//   };
-const handleSubmit = async (e) => {
+  // Submit handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const payload = {
-      ...values,
-      age: values.age ? Number(values.age) : null
-    };
-  
-    try {
-      await api.dCandidate().create(payload);
-      alert("Saved successfully");
-      resetForm();
-    } catch (err) {
-      console.error(err);
-      alert("Error saving data");
+
+    if (validate()) {
+      const payload = {
+        ...values,
+        age: values.age ? Number(values.age) : 0
+      };
+
+      try {
+        await api.dCandidate().create(payload);
+        alert("Saved successfully");
+        resetForm();
+      } catch (err) {
+        console.error("Full error:", err);
+        if (err.response && err.response.data) {
+          console.error("Server response:", err.response.data);
+          alert("Error: " + JSON.stringify(err.response.data));
+        } else {
+          alert("Error saving data. Check console for details.");
+        }
+      }
     }
   };
 
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit}   // ✅ HERE
+      onSubmit={handleSubmit}
       autoComplete="off"
       noValidate
-      sx={{
-        "& .MuiTextField-root": {
-          m: 1,
-          minWidth: 230,
-        },
-      }}
+      sx={{ "& .MuiTextField-root": { m: 1, minWidth: 230 } }}
     >
       <Grid container>
         <Grid item xs={6}>
           <TextField
-            name="fullName"
+            name="fullname"
             label="Full Name"
-            value={values.fullName}
+            value={values.fullname}
             onChange={handleInputChange}
+            {...(errors.fullname && { error: true, helperText: errors.fullname })}
           />
 
           <TextField
@@ -375,9 +537,10 @@ const handleSubmit = async (e) => {
             label="Email"
             value={values.email}
             onChange={handleInputChange}
+            {...(errors.email && { error: true, helperText: errors.email })}
           />
 
-          <FormControl sx={{ m: 1, minWidth: 230 }}>
+          <FormControl sx={{ m: 1, minWidth: 230 }} error={!!errors.bloodgroup}>
             <InputLabel>Blood Group</InputLabel>
             <Select
               name="bloodgroup"
@@ -395,15 +558,21 @@ const handleSubmit = async (e) => {
               <MenuItem value="O+">O +ve</MenuItem>
               <MenuItem value="O-">O -ve</MenuItem>
             </Select>
+            {errors.bloodgroup && (
+              <p style={{ color: "red", margin: "5px 0 0 14px", fontSize: 12 }}>
+                {errors.bloodgroup}
+              </p>
+            )}
           </FormControl>
         </Grid>
 
         <Grid item xs={6}>
           <TextField
-            name="mobile"
-            label="Mobile"
-            value={values.mobile}
+            name="phone"
+            label="Phone"
+            value={values.phone}
             onChange={handleInputChange}
+            {...(errors.phone && { error: true, helperText: errors.phone })}
           />
 
           <TextField
@@ -411,6 +580,7 @@ const handleSubmit = async (e) => {
             label="Age"
             value={values.age}
             onChange={handleInputChange}
+            {...(errors.age && { error: true, helperText: errors.age })}
           />
 
           <TextField
@@ -418,6 +588,7 @@ const handleSubmit = async (e) => {
             label="Address"
             value={values.address}
             onChange={handleInputChange}
+            {...(errors.address && { error: true, helperText: errors.address })}
           />
 
           <Box sx={{ m: 1 }}>
@@ -425,11 +596,7 @@ const handleSubmit = async (e) => {
               Submit
             </Button>
 
-            <Button
-              variant="outlined"
-              sx={{ ml: 1 }}
-              onClick={resetForm}
-            >
+            <Button variant="outlined" sx={{ ml: 1 }} onClick={resetForm}>
               Reset
             </Button>
           </Box>

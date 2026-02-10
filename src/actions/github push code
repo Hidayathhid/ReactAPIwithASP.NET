@@ -1,0 +1,2 @@
+Run the below command to push code in github
+git add . && git commit -m "Your message" && git push

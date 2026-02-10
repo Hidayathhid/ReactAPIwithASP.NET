@@ -422,6 +422,7 @@ const DCandidates = ({ fetchAllDCandidates, DCandidateList }) => {
                   <TableCell>Name</TableCell>
                   <TableCell>Mobile</TableCell>
                   <TableCell>Blood Group</TableCell>
+                  <TableCell>Email</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -432,6 +433,7 @@ const DCandidates = ({ fetchAllDCandidates, DCandidateList }) => {
                       <TableCell>{record.fullName || record.fullname}</TableCell>
                       <TableCell>{record.mobile || record.phone}</TableCell>
                       <TableCell>{record.bloodgroup}</TableCell>
+                      <TableCell>{record.email}</TableCell>
                     </TableRow>
                   ))
                 ) : (
