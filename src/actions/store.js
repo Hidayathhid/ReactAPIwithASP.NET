@@ -29,7 +29,8 @@ import reducers from "../reducers";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const store = createStore(
-  reducers,
+  reducers, //testing
   composeEnhancers(applyMiddleware(thunk)) // ✅ only one enhancer
 );
 
+//testing for github code is push.
